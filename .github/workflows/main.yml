@@ -28,3 +28,12 @@ jobs:
           source("update_data.R")
         shell: Rscript {0}
       
+      - name: Commit files
+        run: |
+          if ! git diff --exit-code --quiet; then
+            git config --local user.email "actions@github.com"
+            git config --local user.name "GitHub Actions"
+            git add --update
+            git commit --message "Update data"
+            git push
+          fi

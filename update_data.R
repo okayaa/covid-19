@@ -57,7 +57,7 @@ paste0("https://covid19.mhlw.go.jp/public/opendata/",
   mutate(date = as.Date(Date)) %>%
   mutate(days_from_2019_12_29 = as.numeric(date - reference_date)) %>%
   mutate(week_num = days_from_2019_12_29 %/% 7 + 1) %>%
-  mutate(week_day = weekdays(date) %>% map(~ WEEKDAY_E %>% equals(.x) %>% extract(WEEKDAY_J, .)) %>% factor) %>%
+  mutate(week_day = date %>% weekdays() %>% map_chr(~ .x %>% equals(WEEKDAY_E) %>% extract(WEEKDAY_J, .))) %>% 
   pivot_longer(cols = ALL:Okinawa, names_to = "prefecture") %>%
   select(-Date) %>%
   filter(prefecture == "ALL") %>%

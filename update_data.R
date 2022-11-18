@@ -13,8 +13,8 @@ if (!require(jsonlite)) {
   library(jsonlite)
 }
 
-# WEEKDAY <- paste0(c("日", "月", "火", "水", "木", "金", "土"), "曜日")
-WEEKDAY <- paste0(c("Sun", "Mon", "Tues", "Wednes", "Thurs", "Fri", "Satur"), "day")
+WEEKDAY_E <- paste0(c("Sun", "Mon", "Tues", "Wednes", "Thurs", "Fri", "Satur"), "day")
+WEEKDAY_J <- paste0(c("日", "月", "火", "水", "木", "金", "土"), "曜日")
 
 reference_date <- as.Date("2019/12/29") # as.POSIXct("2019/12/29", format = "%Y/%m/%d")
 imputes_lacking_week_days <- function(dat) {
@@ -23,7 +23,7 @@ imputes_lacking_week_days <- function(dat) {
         pull(Date) %>%
         as.Date %>% {
         len <- weekdays(.) %>%
-          {WEEKDAY == .} %>%
+          {WEEKDAY_E == .} %>%
           which %>%
           subtract(1)
         seq.Date(from = . - len, to = . - 1, length.out = len) %>%
@@ -35,7 +35,7 @@ imputes_lacking_week_days <- function(dat) {
       pull(Date) %>%
       as.Date %>% {
         len <- weekdays(.) %>%
-        {WEEKDAY == .} %>%
+        {WEEKDAY_E == .} %>%
           which %>%
           subtract(7) %>%
           multiply_by(-1)
@@ -57,7 +57,7 @@ paste0("https://covid19.mhlw.go.jp/public/opendata/",
   mutate(date = as.Date(Date)) %>%
   mutate(days_from_2019_12_29 = as.numeric(date - reference_date)) %>%
   mutate(week_num = days_from_2019_12_29 %/% 7 + 1) %>%
-  mutate(week_day = factor(weekdays(date))) %>%
+  mutate(week_day = weekdays(date) %>% map(~ WEEKDAY_E %>% equals(.x) %>% extract(WEEKDAY_J, .)) %>% factor) %>%
   pivot_longer(cols = ALL:Okinawa, names_to = "prefecture") %>%
   select(-Date) %>%
   filter(prefecture == "ALL") %>%

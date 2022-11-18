@@ -1,4 +1,4 @@
-﻿// var _data = data.filter(function (d) {
+// var _data = data.filter(function (d) {
 //   return d.name == allGroup[0];
 // });
 
@@ -14,10 +14,10 @@ d3.json("dat/newly_confirmed_cases_daily.json", function (data) {
     var chart = nv.models
       .multiBarChart()
       .x(function (d) {
-        return d[3];
+        return d[2];
       }) //We can modify the data accessor functions...
       .y(function (d) {
-        return d[5];
+        return d[4];
       }) //...in case your data is formatted differently.
       .duration(500)
       .useInteractiveGuideline(true)

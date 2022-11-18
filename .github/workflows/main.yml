@@ -1,0 +1,58 @@
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 7 * * 1-6" # 16:00 JST
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up R
+        uses: r-lib/actions/setup-r@v2
+      
+      - name: Install and cache libraries
+        uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          cache: true
+          cache-version: 1
+          packages: |
+            magrittr
+        
+      - name: Checkout
+        uses: actions/checkout@v3
+        
+      # - name: Update and generate the file
+      #   run: | 
+      #     library(magrittr)
+      #
+      #     Sys.time() %>% as.character() %>% write("./docs/dat/test.txt")
+      #   shell: Rscript {0}
+      
+      - name: Update and generate the file
+        run: |
+          source("test.R")
+        shell: Rscript {0}
+      
+      - name: Commit files
+        run: |
+          if ! git diff --exit-code --quiet; then
+            git config --local user.email "actions@github.com"
+            git config --local user.name "GitHub Actions"
+            git add --update
+            git commit --message "Update data"
+            git push
+          fi
+          
+      # - name: Checkout multiple repos (nested)
+      #   uses: actions/checkout@v3
+      #   with:
+      #     repository: okayaa/covid-19
+      #     path: covid-19
+      #     # ref: master
+      #     # token: ${{ secrets.GITHUB_TOKEN }}
+      #            
+      # - name: Copy the file to another repository
+      #   run: |
+      #     # cp docs/dat/test.txt covid-19
+      #     ls
+      #     ls covid-19

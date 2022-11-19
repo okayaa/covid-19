@@ -37,7 +37,7 @@ d3.json("dat/newly_confirmed_cases_daily.json", function (data) {
 
     chart.xAxis
       //.tickValues(xtickValues)
-      .tickFormat((d) => {
+      .tickFormat((d, i) => {
         return data[0]["values"][i][0]; // "第" + d + "週";
         // d3.time.format("%b-%Y")(new Date(d * 10 ** 3)); // UNIX date (from 1970/1/1) second -> millisecond
       })  

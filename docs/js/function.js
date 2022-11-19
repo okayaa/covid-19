@@ -19,6 +19,7 @@ d3.json("dat/newly_confirmed_cases_daily.json", function (data) {
       .y(function (d) {
         return d[4];
       }) //...in case your data is formatted differently.
+      .margin({left: 80})
       .duration(500)
       .useInteractiveGuideline(true)
       // .showTotalInTooltip(true)

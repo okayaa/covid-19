@@ -62,7 +62,7 @@ d3.json("dat/newly_confirmed_cases_daily.json", function (data) {
       //   return d == null ? null : d3.format(",.0f")(d) + "人";
       // });
       .contentGenerator(d => {
-        var header = d.series[0].data[1] + " ~ " + d.series[6].data[1];
+        var header = d.series[0].data[0] + " ~ " + d.series[6].data[0];
         var headerhtml = "<thead><tr><td colspan='3'><strong class='x-value'>" + 
                          header + 
                          "</strong></td></tr></thead>";
@@ -71,7 +71,7 @@ d3.json("dat/newly_confirmed_cases_daily.json", function (data) {
           return("<tr>" + 
                  "<td class='legend-color-guide'>" + "<div style='background-color: " + d.color + ";'></div></td>" + 
                  "<td class='key'>" + d.key + "</td>" + 
-                 "<td class='value'>" + (d.value == null ? null : d3.format(",.0f")(d.value)) + "人" + "</td>" + 
+                 "<td class='value'>" + (d.value == null ? null : (d3.format(",.0f")(d.value) + "人")) + "</td>" + 
                  "</tr>")
         }).join("");
         var total = d.series.map(d => d.value)
@@ -82,7 +82,7 @@ d3.json("dat/newly_confirmed_cases_daily.json", function (data) {
                    "<tr>" + 
                      "<td class='legend-color-guide'>" + "</td>" + 
                      "<td class='key'>" + "合計" + "</td>" + 
-                     "<td class='value'>" + (total == null ? null : d3.format(",.0f")(total)) + "人" + "</td>" + 
+                     "<td class='value'>" + (total == null ? null : (d3.format(",.0f")(total) + "人")) + "</td>" + 
                    "</tr>";
         bodyhtml = "<tbody>" + bodyhtml + "</tbody>";
 

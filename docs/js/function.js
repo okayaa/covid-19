@@ -62,32 +62,42 @@ d3.json("dat/newly_confirmed_cases_daily.json", function (data) {
       //   return d == null ? null : d3.format(",.0f")(d) + "人";
       // });
       .contentGenerator(d => {
-        var header = d.series[0].data[0] + " ~ " + d.series[6].data[0];
+        // console.log(chart.state.disabled);
+        var header;
+        if (d.series.length > 1) {
+          header = data[0].values[d.index][0] + " ~ " + data[6].values[d.index][0];
+        } else if (d.series.length == 1) {
+          header = d.series[0].data[0];
+        } else {
+          header = "";
+        }
         var headerhtml = "<thead><tr><td colspan='3'><strong class='x-value'>" + 
                          header + 
                          "</strong></td></tr></thead>";
 
         var bodyhtml = d.series.map(d => {
-          return("<tr>" + 
+          return "<tr>" + 
                  "<td class='legend-color-guide'>" + "<div style='background-color: " + d.color + ";'></div></td>" + 
                  "<td class='key'>" + d.key + "</td>" + 
-                 "<td class='value'>" + (d.value == null ? null : (d3.format(",.0f")(d.value) + "人")) + "</td>" + 
-                 "</tr>")
+                 "<td class='value'>" + (d.value === null ? "" : (d3.format(",.0f")(d.value) + "人")) + "</td>" + 
+                 "</tr>";
         }).join("");
         var total = d.series.map(d => d.value)
                       .reduce((accumulator, current_value) => {
-                        return accumulator + current_value
+                        return accumulator + current_value;
                       });
-        bodyhtml = bodyhtml + 
+        if (d.series.length > 1) {
+                  bodyhtml = bodyhtml + 
                    "<tr>" + 
                      "<td class='legend-color-guide'>" + "</td>" + 
                      "<td class='key'>" + "合計" + "</td>" + 
-                     "<td class='value'>" + (total == null ? null : (d3.format(",.0f")(total) + "人")) + "</td>" + 
+                     "<td class='value'>" + d3.format(",.0f")(total) + "人" + "</td>" + 
                    "</tr>";
+        }
         bodyhtml = "<tbody>" + bodyhtml + "</tbody>";
 
         return "<table>" + headerhtml + bodyhtml + "</table>";
-      })
+      });
 
     d3.select("#chart").datum(data).call(chart);
 

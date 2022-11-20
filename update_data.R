@@ -13,8 +13,11 @@ if (!require(jsonlite)) {
   library(jsonlite)
 }
 
+# Sys.setlocale(locale = "C")
+
 WEEKDAY_E <- paste0(c("Sun", "Mon", "Tues", "Wednes", "Thurs", "Fri", "Satur"), "day")
-WEEKDAY_J <- paste0(c("日", "月", "火", "水", "木", "金", "土"), "曜日")
+# WEEKDAY_J <- paste0(c("日", "月", "火", "水", "木", "金", "土"), "曜日")
+WEEKDAY_J <- c("日", "月", "火", "水", "木", "金", "土")
 
 reference_date <- as.Date("2019/12/29") # as.POSIXct("2019/12/29", format = "%Y/%m/%d")
 imputes_lacking_week_days <- function(dat) {
@@ -60,10 +63,12 @@ paste0("https://covid19.mhlw.go.jp/public/opendata/",
   mutate(week_day = date %>% weekdays() %>% map_chr(~ .x %>% equals(WEEKDAY_E) %>% extract(WEEKDAY_J, .))) %>% 
   pivot_longer(cols = ALL:Okinawa, names_to = "prefecture") %>%
   select(-Date) %>%
-  filter(prefecture == "ALL") %>%
+  # filter(prefecture == "ALL") %>%
   arrange(date) %>%
-  group_by(week_day) %>%
-  nest() %$%
-  map2(week_day, data, ~ list(key = .x, values = .y)) %>%
+  group_by(prefecture, week_day) %>%
+  # nest() %$%
+  # map2(week_day, data, ~ list(key = .x, values = .y)) %>%
+  nest() %>%
+  pmap(function(prefecture, week_day, data) list(prefecture = prefecture, data = list(key = week_day, values = data))) %>%
   toJSON(dataframe = "values", auto_unbox = TRUE, pretty = TRUE, na = "null") %>%
   write(file = "docs/dat/newly_confirmed_cases_daily.json")

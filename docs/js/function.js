@@ -1,6 +1,12 @@
 d3.json("dat/newly_confirmed_cases_daily.json", function (all_data) {
 
-  var prefecture_J = ['全国合計', '北海道', '青森県', '岩手県', '宮城県', '秋田県', '山形県', '福島県', '茨城県', '栃木県', '群馬県', '埼玉県', '千葉県', '東京都', '神奈川県', '新潟県', '富山県', '石川県', '福井県', '山梨県', '長野県', '岐阜県', '静岡県', '愛知県', '三重県', '滋賀県', '京都府', '大阪府', '兵庫県', '奈良県', '和歌山県', '鳥取県', '島根県', '岡山県', '広島県', '山口県', '徳島県', '香川県', '愛媛県', '高知県', '福岡県', '佐賀県', '長崎県', '熊本県', '大分県', '宮崎県', '鹿児島県', '沖縄県'];
+  var prefecture_J = ['全国合計', '北海道', '青森県', '岩手県', '宮城県', '秋田県', '山形県', 
+                      '福島県', '茨城県', '栃木県', '群馬県', '埼玉県', '千葉県', '東京都', 
+                      '神奈川県', '新潟県', '富山県', '石川県', '福井県', '山梨県', '長野県', 
+                      '岐阜県', '静岡県', '愛知県', '三重県', '滋賀県', '京都府', '大阪府', 
+                      '兵庫県', '奈良県', '和歌山県', '鳥取県', '島根県', '岡山県', '広島県', 
+                      '山口県', '徳島県', '香川県', '愛媛県', '高知県', '福岡県', '佐賀県', 
+                      '長崎県', '熊本県', '大分県', '宮崎県', '鹿児島県', '沖縄県'];
 
   // List of groups (here I have one group per column)
   var all_group = [...new Set(all_data.map((d) => {return(d.prefecture)}))]
@@ -124,23 +130,33 @@ d3.json("dat/newly_confirmed_cases_daily.json", function (all_data) {
       // console.log(selected_option)
       data = all_data.filter(d => {return d.prefecture == selected_option}).map(d => {return d.data});
       // console.log(data)
-      
-      var current_state = chart.state.disabled;
+            
+      var previous_state = chart.state.disabled;
 
       // run the updateChart function with this selected option
-      d3.select("#chart").datum(data).call(chart.update) // .call(chart)
-        // To retain "state" (week days were checked or not) when the prefecture was changed.
-        .each(() => {
-          d3.select("g.nv-legendWrap")
-            .selectAll("g.nv-series")
-            .filter((d, i) => {return current_state[i] == true;})
-            .each(function() { // can NOT use an arrow function...
-              this.dispatchEvent(new Event("click"));
-            });
-        });
-    });
+      d3.select("#chart").datum(data).call(chart.update); // .call(chart)
+      
+      // .call(function() {
+      //   d3.select("g.nv-legendWrap")
+      //   .selectAll("g.nv-series")
+      //   .filter((d, i) => {return current_state[i] == true;})
+      //   .each(function(d, i) { // can NOT use an arrow function...
+      //     this.dispatchEvent(new Event("click"));
+      //     // d3.select("circle").style("fill-opacity", function() {return current_state[i] ? 0 : 1});
+      //   });
 
-    return chart;
+      var current_state = chart.state.disabled;
+
+      // To retain "state" (week days were checked or not) when the prefecture was changed.
+      d3.select("g.nv-legendWrap")
+        .selectAll("g.nv-series")
+        .each(function(d, i) { // can NOT use an arrow function...
+          if (current_state[i] != previous_state[i]) this.dispatchEvent(new Event("click"));
+        });
+    }); 
 
   });
+
+  return chart;
+
 });

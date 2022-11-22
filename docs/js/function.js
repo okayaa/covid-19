@@ -177,7 +177,7 @@ d3.json("dat/newly_confirmed_cases_daily.json", function (all_data) {
         });
     }); 
 
-    d3.selectAll(".date").on("change", function(d) {
+    d3.selectAll("#start_date, #end_date").on("change", function(d) {
 
       // dates = flatpickr("#duration", {mode: "range", dateFormat: "dMY", 
       //                                 enable: [function(date) {return (date >= new Date("16Jan2020") & date <= new Date(last_date));}]}).selectedDates;  

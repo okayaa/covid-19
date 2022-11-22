@@ -147,34 +147,40 @@ d3.json("dat/newly_confirmed_cases_daily.json", function (all_data) {
 
     // When the button is changed, run the updateChart function
     d3.select("#select_button").on("change", function(d) {
-      // recover the option that has been chosen
-      selected_option = d3.select(this).property("value"); // global variable
-      // console.log(selected_option)
-      data = all_data.filter(d => {return d.prefecture == selected_option}).map(d => {return {key: d.data.key, values: d.data.values.filter(d => {return (d[2] >= weeks_start & d[2] <= weeks_end)})}});
-      // console.log(data)
-            
-      var previous_state = chart.state.disabled;
 
-      // run the updateChart function with this selected option
-      d3.select("#chart").datum(data).call(chart.update); // .call(chart)
-      
-      // .call(function() {
-      //   d3.select("g.nv-legendWrap")
-      //   .selectAll("g.nv-series")
-      //   .filter((d, i) => {return current_state[i] == true;})
-      //   .each(function(d, i) { // can NOT use an arrow function...
-      //     this.dispatchEvent(new Event("click"));
-      //     // d3.select("circle").style("fill-opacity", function() {return current_state[i] ? 0 : 1});
-      //   });
+      // if (start_date.length == 1 && end_date.length == 1 && (end_date[0] >= start_date[0])) {
 
-      var current_state = chart.state.disabled;
+        // recover the option that has been chosen
+        selected_option = d3.select(this).property("value"); // global variable
+        // console.log(selected_option)
+        data = all_data.filter(d => {return d.prefecture == selected_option}).map(d => {return {key: d.data.key, values: d.data.values.filter(d => {return (d[2] >= weeks_start & d[2] <= weeks_end)})}});
+        // console.log(data)
+              
+        var previous_state = chart.state.disabled;
 
-      // To retain "state" (week days were checked or not) when the prefecture was changed.
-      d3.select("g.nv-legendWrap")
-        .selectAll("g.nv-series")
-        .each(function(d, i) { // can NOT use an arrow function...
-          if (current_state[i] != previous_state[i]) this.dispatchEvent(new Event("click"));
-        });
+        // run the updateChart function with this selected option
+        d3.select("#chart").datum(data).call(chart.update); // .call(chart)
+        
+        // .call(function() {
+        //   d3.select("g.nv-legendWrap")
+        //   .selectAll("g.nv-series")
+        //   .filter((d, i) => {return current_state[i] == true;})
+        //   .each(function(d, i) { // can NOT use an arrow function...
+        //     this.dispatchEvent(new Event("click"));
+        //     // d3.select("circle").style("fill-opacity", function() {return current_state[i] ? 0 : 1});
+        //   });
+
+        var current_state = chart.state.disabled;
+
+        // To retain "state" (week days were checked or not) when the prefecture was changed.
+        d3.select("g.nv-legendWrap")
+          .selectAll("g.nv-series")
+          .each(function(d, i) { // can NOT use an arrow function...
+            if (current_state[i] != previous_state[i]) this.dispatchEvent(new Event("click"));
+          });
+
+      // }
+
     }); 
 
     d3.selectAll("#start_date, #end_date").on("change", function(d) {
@@ -190,7 +196,7 @@ d3.json("dat/newly_confirmed_cases_daily.json", function (all_data) {
       end_date = flatpickr("#end_date", {mode: "single", dateFormat: "dMY", 
                            enable: [function(date) {return (date >= new Date("16Jan2020") & date <= new Date(last_date));}]}).selectedDates;
 
-      if (start_date.length == 1 && end_date.length == 1 && (end_date[0] >= start_date[0])) {
+      // if (start_date.length == 1 && end_date.length == 1 && (end_date[0] >= start_date[0])) {
 
         var days_start = (start_date[0] - reference_date) / (24 * 60 * 60 * 1000);
         var days_end = (end_date[0] - reference_date) / (24 * 60 * 60 * 1000);
@@ -202,7 +208,7 @@ d3.json("dat/newly_confirmed_cases_daily.json", function (all_data) {
 
         d3.select("#chart").datum(data).call(chart.update); // .call(chart)
 
-      }
+      // }
       
     }); 
 

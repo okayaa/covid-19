@@ -16,8 +16,8 @@ if (!require(jsonlite)) {
 # Sys.setlocale(locale = "C")
 
 WEEKDAY_E <- paste0(c("Sun", "Mon", "Tues", "Wednes", "Thurs", "Fri", "Satur"), "day")
-# WEEKDAY_J <- paste0(c("日", "月", "火", "水", "木", "金", "土"), "曜日")
-WEEKDAY_J <- c("日", "月", "火", "水", "木", "金", "土")
+WEEKDAY_J <- paste0(c("日", "月", "火", "水", "木", "金", "土"), "曜日")
+# WEEKDAY_J <- c("日", "月", "火", "水", "木", "金", "土")
 
 reference_date <- as.Date("2019/12/29") # as.POSIXct("2019/12/29", format = "%Y/%m/%d")
 imputes_lacking_week_days <- function(dat) {

@@ -18,9 +18,17 @@
 
   <body>
     <h1>COVID-19 新規感染者数 in 日本</h1>
-    <select id="select_button" style='margin-bottom: 10px;'></select>
     <div style="height: 600px">
-      <svg id="chart" ontouchstart=""></svg>
+      <a style='margin: 10px;'>都道府県:</a>
+      <select id="select_button"></select>
+
+      <a style='margin-left: 10px;'>&</a>
+
+      <a style='margin: 10px;'>期間:</a>
+      <input id="start_date" class="date" size=7 style='text-align: center;'>
+      <a style='margin: 10px;'>~</a>
+      <input id="end_date" class="date" size=7 style='text-align: center; margin-bottom: 20px;'>
+      <svg id="chart"></svg> <!-- ontouchstart=""></svg> -->
       <!-- ontouchstart = "": To make hover available for touch-devices -->
     </div>
   </body>

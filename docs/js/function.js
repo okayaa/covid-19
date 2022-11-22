@@ -24,7 +24,7 @@ d3.json("dat/newly_confirmed_cases_daily.json", function (all_data) {
 
   var reference_date = new Date("29Dec2019");
 
-  var last_day_candidates = all_data.filter(d => d.prefecture == "ALL").map(d => d.data.values.slice(-1));
+  var last_day_candidates = all_data.filter(d => d.prefecture == "ALL").map(d => d.data.values.slice(-1)).filter(d => d !== null);
   var last_day = Math.max(...last_day_candidates.map(d => d[0][1]));
   // var last_week = last_day_candidates.filter(d => d[0][1] == last_day)[0][0][2];
   var last_date = d3.time.format("%d%b%Y")(new Date(last_day_candidates.filter(d => d[0][1] == last_day)[0][0][0]));

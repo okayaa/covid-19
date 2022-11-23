@@ -21,25 +21,19 @@ d3.json("dat/newly_confirmed_cases_daily.json", function (all_data) {
     .text((d, i) => {return prefecture_J[i]}) // text showed in the menu
     .attr("value", (d) => {return d}); // corresponding value returned by the button
 
-
-  var reference_date = new Date("29Dec2019");
-
-  var last_day_candidates = all_data.filter(d => d.prefecture == "ALL").map(d => d.data.values.slice(-1)).filter(d => d !== null);
-  var last_day = Math.max(...last_day_candidates.map(d => d[0][1]));
-  // var last_week = last_day_candidates.filter(d => d[0][1] == last_day)[0][0][2];
-  var last_date = d3.time.format("%d%b%Y")(new Date(last_day_candidates.filter(d => d[0][1] == last_day)[0][0][0]));
-
   // var dates = flatpickr("#duration", {mode: "range", dateFormat: "dMY", 
   //                                     enable: [function(date) {return (date >= new Date("16Jan2020") & date <= new Date(last_date));}], 
   //                                     defaultDate: ["16Jan2020", last_date]}).selectedDates; 
 
-  var start_date = flatpickr("#start_date", {mode: "single", dateFormat: "dMY", 
-                                             enable: [function(date) {return (date >= new Date("16Jan2020") & date <= new Date(last_date));}], 
-                                             defaultDate: "16Jan2020", disableMobile: "true"}).selectedDates;
+  // var start_date = flatpickr("#start_date", {mode: "single", dateFormat: "dMY", 
+  //                                            enable: [function(date) {return (date >= new Date("16Jan2020") & date <= new Date(last_date));}], 
+  //                                           //  minDate: "16Jan2020", maxDate: last_date,
+  //                                            defaultDate: "16Jan2020", disableMobile: "true"}).selectedDates; // , disableMobile: "true"
 
-  var end_date = flatpickr("#end_date", {mode: "single", dateFormat: "dMY", 
-                                         enable: [function(date) {return (date >= new Date("16Jan2020") & date <= new Date(last_date));}], 
-                                         defaultDate: last_date, disableMobile: "true"}).selectedDates;                                
+  // var end_date = flatpickr("#end_date", {mode: "single", dateFormat: "dMY", 
+  //                                        enable: [funct ion(date) {return (date >= new Date("16Jan2020") & date <= new Date(last_date));}], 
+  //                                       //  minDate: "16Jan2020", maxDate: last_date,
+  //                                        defaultDate: last_date, disableMobile: "true"}).selectedDates; // , disableMobile: "true"
 
   nv.addGraph(function () {
     // console.log(data);
@@ -137,12 +131,6 @@ d3.json("dat/newly_confirmed_cases_daily.json", function (all_data) {
     // initial value
     var selected_option = "ALL";
 
-    var days_start = (start_date[0] - reference_date) / (24 * 60 * 60 * 1000);
-    var weeks_start = Math.floor(days_start / 7) + 1;
-
-    var days_end = (end_date[0] - reference_date) / (24 * 60 * 60 * 1000);
-    var weeks_end = Math.floor(days_end / 7) + 1;
-
     var data = all_data.filter(d => {return d.prefecture == selected_option}).map(d => {return d.data});
 
     d3.select("#chart").datum(data).call(chart);
@@ -150,6 +138,8 @@ d3.json("dat/newly_confirmed_cases_daily.json", function (all_data) {
     d3.select(".tick.zero line").style("stroke", "#000"); // to draw x axis in black
 
     nv.utils.windowResize(chart.update);
+
+    var previous_state, current_state;
 
     // When the button is changed, run the updateChart function
     d3.select("#select_button").on("change", function(d) {
@@ -162,7 +152,7 @@ d3.json("dat/newly_confirmed_cases_daily.json", function (all_data) {
         data = all_data.filter(d => {return d.prefecture == selected_option}).map(d => {return {key: d.data.key, values: d.data.values.filter(d => {return (d[2] >= weeks_start & d[2] <= weeks_end)})}});
         // console.log(data)
               
-        var previous_state = chart.state.disabled;
+        previous_state = chart.state.disabled;
 
         // run the updateChart function with this selected option
         d3.select("#chart").datum(data).call(chart.update); // .call(chart)
@@ -176,7 +166,7 @@ d3.json("dat/newly_confirmed_cases_daily.json", function (all_data) {
         //     // d3.select("circle").style("fill-opacity", function() {return current_state[i] ? 0 : 1});
         //   });
 
-        var current_state = chart.state.disabled;
+        current_state = chart.state.disabled;
 
         // To retain "state" (week days were checked or not) when the prefecture was changed.
         d3.select("g.nv-legendWrap")
@@ -189,36 +179,35 @@ d3.json("dat/newly_confirmed_cases_daily.json", function (all_data) {
 
     }); 
 
-    d3.selectAll("#start_date, #end_date").on("change", function(d) {
+    var reference_date = new Date("29Dec2019");
 
-      // dates = flatpickr("#duration", {mode: "range", dateFormat: "dMY", 
-      //                                 enable: [function(date) {return (date >= new Date("16Jan2020") & date <= new Date(last_date));}]}).selectedDates;  
-
-      // global variable
-      start_date = flatpickr("#start_date", {mode: "single", dateFormat: "dMY", 
-                             enable: [function(date) {return (date >= new Date("16Jan2020") & date <= new Date(last_date));}], disableMobile: "true"}).selectedDates;
-
-      // global variable
-      end_date = flatpickr("#end_date", {mode: "single", dateFormat: "dMY", 
-                           enable: [function(date) {return (date >= new Date("16Jan2020") & date <= new Date(last_date));}], disableMobile: "true"}).selectedDates;
-
-      // if (start_date.length == 1 && end_date.length == 1 && (end_date[0] >= start_date[0])) {
-
-        // global variable
-        days_start = (start_date[0] - reference_date) / (24 * 60 * 60 * 1000);
-        weeks_start = Math.floor(days_start / 7) + 1;
-
-        // global variable
-        days_end = (end_date[0] - reference_date) / (24 * 60 * 60 * 1000);
-        weeks_end = Math.floor(days_end / 7) + 1;
+    var first_date = new Date(2020, 1 - 1, 16)
+    var last_day_candidates = all_data.filter(d => d.prefecture == "ALL").map(d => d.data.values.slice(-1)).filter(d => d !== null);
+    var last_day = Math.max(...last_day_candidates.map(d => d[0][1]));
+    // var last_week = last_day_candidates.filter(d => d[0][1] == last_day)[0][0][2];
+    var last_date = new Date(last_day_candidates.filter(d => d[0][1] == last_day)[0][0][0]);  
+    
+    var config_date = {id: 1, minDate: first_date, maxDate: last_date, startDate: last_date, showAllDates: true,
+      formatter: (input, date, instance) => {input.value = d3.time.format("%d%b%Y")(date)},
+      onSelect: (instance, date) => {
+        if (instance.el.id == "start_date") {
+          // global variable
+          days_start = (date - reference_date) / (24 * 60 * 60 * 1000);
+          weeks_start = Math.floor(days_start / 7) + 1;
+        } else if (instance.el.id == "end_date") {
+          // global variable
+          days_end = (date - reference_date) / (24 * 60 * 60 * 1000);
+          weeks_end = Math.floor(days_end / 7) + 1;
+        } else {
+        }
 
         data = all_data.filter(d => {return d.prefecture == selected_option}).map(d => {return {key: d.data.key, values: d.data.values.filter(d => {return (d[2] >= weeks_start & d[2] <= weeks_end)})}});
 
-        var previous_state = chart.state.disabled;
+        previous_state = chart.state.disabled;
 
         d3.select("#chart").datum(data).call(chart.update); // .call(chart)
 
-        var current_state = chart.state.disabled;
+        current_state = chart.state.disabled;
 
         // To retain "state" (week days were checked or not) when the prefecture was changed.
         d3.select("g.nv-legendWrap")
@@ -226,10 +215,58 @@ d3.json("dat/newly_confirmed_cases_daily.json", function (all_data) {
         .each(function(d, i) { // can NOT use an arrow function...
           if (current_state[i] != previous_state[i]) this.dispatchEvent(new Event("click"));
         });
-
-      // }
+      }}
       
-    }); 
+    var start_date = datepicker("#start_date", {...config_date, ...{dateSelected: first_date, position: "bl"}});
+    var end_date = datepicker("#end_date", {...config_date, ...{dateSelected: last_date, position: "br"}});
+
+    var days_start = (start_date.getRange().start - reference_date) / (24 * 60 * 60 * 1000);
+    var weeks_start = Math.floor(days_start / 7) + 1;
+
+    var days_end = (end_date.getRange().end - reference_date) / (24 * 60 * 60 * 1000);
+    var weeks_end = Math.floor(days_end / 7) + 1;
+
+    // d3.selectAll("#start_date, #end_date").on("change", function(d) {
+
+    //   // dates = flatpickr("#duration", {mode: "range", dateFormat: "dMY", 
+    //   //                                 enable: [function(date) {return (date >= new Date("16Jan2020") & date <= new Date(last_date));}]}).selectedDates;  
+
+    //   // global variable
+    //   start_date = flatpickr("#start_date", {mode: "single", dateFormat: "dMY", 
+    //                          enable: [function(date) {return (date >= new Date("16Jan2020") & date <= new Date(last_date));}], disableMobile: "true"}).selectedDates;
+
+    //   // global variable
+    //   end_date = flatpickr("#end_date", {mode: "single", dateFormat: "dMY", 
+    //                        enable: [function(date) {return (date >= new Date("16Jan2020") & date <= new Date(last_date));}], disableMobile: "true"}).selectedDates;
+
+    //   // if (start_date.length == 1 && end_date.length == 1 && (end_date[0] >= start_date[0])) {
+
+    //     // global variable
+    //     days_start = (start_date[0] - reference_date) / (24 * 60 * 60 * 1000);
+    //     weeks_start = Math.floor(days_start / 7) + 1;
+
+    //     // global variable
+    //     days_end = (end_date[0] - reference_date) / (24 * 60 * 60 * 1000);
+    //     weeks_end = Math.floor(days_end / 7) + 1;
+
+    //     data = all_data.filter(d => {return d.prefecture == selected_option}).map(d => {return {key: d.data.key, values: d.data.values.filter(d => {return (d[2] >= weeks_start & d[2] <= weeks_end)})}});
+
+    //     var previous_state = chart.state.disabled;
+
+    //     d3.select("#chart").datum(data).call(chart.update); // .call(chart)
+
+    //     var current_state = chart.state.disabled;
+
+    //     // To retain "state" (week days were checked or not) when the prefecture was changed.
+    //     d3.select("g.nv-legendWrap")
+    //     .selectAll("g.nv-series")
+    //     .each(function(d, i) { // can NOT use an arrow function...
+    //       if (current_state[i] != previous_state[i]) this.dispatchEvent(new Event("click"));
+    //     });
+
+    //   // }
+      
+    // }); 
 
   });
 

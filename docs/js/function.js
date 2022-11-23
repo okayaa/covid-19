@@ -136,8 +136,13 @@ d3.json("dat/newly_confirmed_cases_daily.json", function (all_data) {
 
     // initial value
     var selected_option = "ALL";
+
+    var days_start = (start_date[0] - reference_date) / (24 * 60 * 60 * 1000);
     var weeks_start = Math.floor(days_start / 7) + 1;
+
+    var days_end = (end_date[0] - reference_date) / (24 * 60 * 60 * 1000);
     var weeks_end = Math.floor(days_end / 7) + 1;
+
     var data = all_data.filter(d => {return d.prefecture == selected_option}).map(d => {return d.data});
 
     d3.select("#chart").datum(data).call(chart);
@@ -199,15 +204,28 @@ d3.json("dat/newly_confirmed_cases_daily.json", function (all_data) {
 
       // if (start_date.length == 1 && end_date.length == 1 && (end_date[0] >= start_date[0])) {
 
-        var days_start = (start_date[0] - reference_date) / (24 * 60 * 60 * 1000);
-        var days_end = (end_date[0] - reference_date) / (24 * 60 * 60 * 1000);
+        // global variable
+        days_start = (start_date[0] - reference_date) / (24 * 60 * 60 * 1000);
+        weeks_start = Math.floor(days_start / 7) + 1;
 
-        weeks_start = Math.floor(days_start / 7) + 1; // global variable
-        weeks_end = Math.floor(days_end / 7) + 1; // global variable
+        // global variable
+        days_end = (end_date[0] - reference_date) / (24 * 60 * 60 * 1000);
+        weeks_end = Math.floor(days_end / 7) + 1;
 
         data = all_data.filter(d => {return d.prefecture == selected_option}).map(d => {return {key: d.data.key, values: d.data.values.filter(d => {return (d[2] >= weeks_start & d[2] <= weeks_end)})}});
 
+        var previous_state = chart.state.disabled;
+
         d3.select("#chart").datum(data).call(chart.update); // .call(chart)
+
+        var current_state = chart.state.disabled;
+
+        // To retain "state" (week days were checked or not) when the prefecture was changed.
+        d3.select("g.nv-legendWrap")
+        .selectAll("g.nv-series")
+        .each(function(d, i) { // can NOT use an arrow function...
+          if (current_state[i] != previous_state[i]) this.dispatchEvent(new Event("click"));
+        });
 
       // }
       

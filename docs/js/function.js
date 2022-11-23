@@ -35,11 +35,11 @@ d3.json("dat/newly_confirmed_cases_daily.json", function (all_data) {
 
   var start_date = flatpickr("#start_date", {mode: "single", dateFormat: "dMY", 
                                              enable: [function(date) {return (date >= new Date("16Jan2020") & date <= new Date(last_date));}], 
-                                             defaultDate: "16Jan2020"}).selectedDates;
+                                             defaultDate: "16Jan2020", disableMobile: "true"}).selectedDates;
 
   var end_date = flatpickr("#end_date", {mode: "single", dateFormat: "dMY", 
                                          enable: [function(date) {return (date >= new Date("16Jan2020") & date <= new Date(last_date));}], 
-                                         defaultDate: last_date}).selectedDates;                                
+                                         defaultDate: last_date, disableMobile: "true"}).selectedDates;                                
 
   nv.addGraph(function () {
     // console.log(data);
@@ -196,11 +196,11 @@ d3.json("dat/newly_confirmed_cases_daily.json", function (all_data) {
 
       // global variable
       start_date = flatpickr("#start_date", {mode: "single", dateFormat: "dMY", 
-                             enable: [function(date) {return (date >= new Date("16Jan2020") & date <= new Date(last_date));}]}).selectedDates;
+                             enable: [function(date) {return (date >= new Date("16Jan2020") & date <= new Date(last_date));}], disableMobile: "true"}).selectedDates;
 
       // global variable
       end_date = flatpickr("#end_date", {mode: "single", dateFormat: "dMY", 
-                           enable: [function(date) {return (date >= new Date("16Jan2020") & date <= new Date(last_date));}]}).selectedDates;
+                           enable: [function(date) {return (date >= new Date("16Jan2020") & date <= new Date(last_date));}], disableMobile: "true"}).selectedDates;
 
       // if (start_date.length == 1 && end_date.length == 1 && (end_date[0] >= start_date[0])) {
 

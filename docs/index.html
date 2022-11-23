@@ -10,8 +10,12 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/nvd3/1.8.6/nv.d3.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/nvd3/1.8.6/nv.d3.min.css"/>
     
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.js"></script> -->
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.css"> -->
+
+    <!-- To avoid ’CSSStyleSheet’: Cannot access rules, locate in the same server -->
+    <script src="js/flatpickr.min.js"></script> <!-- Need to modify around "document.styleSheets" from the origin -->
+    <link rel="stylesheet" href="css/flatpickr.min.css"> <!-- Need to locate in the same server -->
     
     <script src="js/function.js"></script>
   </head>

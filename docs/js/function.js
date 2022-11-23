@@ -136,7 +136,8 @@ d3.json("dat/newly_confirmed_cases_daily.json", function (all_data) {
 
     // initial value
     var selected_option = "ALL";
-    var weeks_start, weeks_end;
+    var weeks_start = Math.floor(days_start / 7) + 1;
+    var weeks_end = Math.floor(days_end / 7) + 1;
     var data = all_data.filter(d => {return d.prefecture == selected_option}).map(d => {return d.data});
 
     d3.select("#chart").datum(data).call(chart);

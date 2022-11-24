@@ -187,7 +187,7 @@ d3.json("dat/newly_confirmed_cases_daily.json", function (all_data) {
     // var last_week = last_day_candidates.filter(d => d[0][1] == last_day)[0][0][2];
     var last_date = new Date(last_day_candidates.filter(d => d[0][1] == last_day)[0][0][0]);  
     
-    var config_date = {id: 1, minDate: first_date, maxDate: last_date, startDate: last_date, showAllDates: true,
+    var config_date = {id: 1, minDate: first_date, maxDate: last_date, startDate: last_date, showAllDates: true, disableMobile: true,
       formatter: (input, date, instance) => {input.value = d3.time.format("%d%b%Y")(date)},
       onSelect: (instance, date) => {
         if (instance.el.id == "start_date") {

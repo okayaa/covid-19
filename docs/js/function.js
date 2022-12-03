@@ -186,8 +186,26 @@ d3.json("dat/newly_confirmed_cases_daily.json", function (all_data) {
 
     }); 
     
-    var cb = function(start_date, end_date) {
-    
+    // var cb = 
+
+    $('#reportrange').daterangepicker({      
+        startDate: first_date,
+        endDate: last_date,
+        minDate: first_date,
+        maxDate: last_date,
+        linkedCalendars: false,
+        opens: "left",
+        ranges: {
+          // 'Last Week': [last_date.clone().subtract(1, 'weeks').startOf('weeks'), last_date.clone().subtract(1, 'weeks').endOf('weeks')],
+          'This Week': [last_date.clone().startOf('weeks'), last_date],
+          'Last + This Week': [last_date.clone().subtract(1, 'weeks').startOf('weeks'), last_date],
+          '4 Weeks (1 Month)': [last_date.clone().subtract(4 - 1, 'weeks').startOf('weeks'), last_date],
+          '13 Weeks (3 Months)': [last_date.clone().subtract(13 - 1, 'weeks').startOf('weeks'), last_date],
+          '26 Weeks (6 Months)': [last_date.clone().subtract(26 - 1, 'weeks').startOf('weeks'), last_date],
+          '52 Weeks (1 year)': [last_date.clone().subtract(52 - 1, 'weeks').startOf('weeks'), last_date],
+          'Entire Period': [first_date, last_date]
+        }
+    }, function(start_date, end_date) {
       d3.select('#reportrange span')
         .text(start_date.format('DDMMMYYYY') + ' ~ ' + end_date.format('DDMMMYYYY'));
   
@@ -210,26 +228,7 @@ d3.json("dat/newly_confirmed_cases_daily.json", function (all_data) {
         .each(function(d, i) { // can NOT use an arrow function...
           if (current_state[i] != previous_state[i]) this.dispatchEvent(new Event("click"));
         });
-    }
-
-    $('#reportrange').daterangepicker({      
-        startDate: first_date,
-        endDate: last_date,
-        minDate: first_date,
-        maxDate: last_date,
-        linkedCalendars: false,
-        opens: "left",
-        ranges: {
-          // 'Last Week': [last_date.clone().subtract(1, 'weeks').startOf('weeks'), last_date.clone().subtract(1, 'weeks').endOf('weeks')],
-          'This Week': [last_date.clone().startOf('weeks'), last_date],
-          'Last + This Week': [last_date.clone().subtract(1, 'weeks').startOf('weeks'), last_date],
-          '4 Weeks (1 Month)': [last_date.clone().subtract(4 - 1, 'weeks').startOf('weeks'), last_date],
-          '13 Weeks (3 Months)': [last_date.clone().subtract(13 - 1, 'weeks').startOf('weeks'), last_date],
-          '26 Weeks (6 Months)': [last_date.clone().subtract(26 - 1, 'weeks').startOf('weeks'), last_date],
-          '52 Weeks (1 year)': [last_date.clone().subtract(52 - 1, 'weeks').startOf('weeks'), last_date],
-          'Entire Period': [first_date, last_date]
-        }
-    }, cb);
+    });
 
   });
 

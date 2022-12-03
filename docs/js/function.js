@@ -169,8 +169,8 @@ d3.json("dat/newly_confirmed_cases_daily.json", function (all_data) {
     
     var reference_date = moment(new Date("29Dec2019"));
 
-    let first_date = moment(new Date("16Jan2020"));
-    // var first_date = new Date(2020, 1 - 1, 16)
+    let first_date = moment(new Date("17Jan2020"));
+    // var first_date = new Date(2020, 1 - 1, 16);
     var last_day_candidates = all_data.filter(d => d.prefecture == "ALL").map(d => d.data.values.slice(-1)).filter(d => d !== null);
     var last_day = Math.max(...last_day_candidates.map(d => d[0][1]));
     // var last_week = last_day_candidates.filter(d => d[0][1] == last_day)[0][0][2];
@@ -181,11 +181,9 @@ d3.json("dat/newly_confirmed_cases_daily.json", function (all_data) {
 
     var end_days = last_date.diff(reference_date, "days");
     var end_weeks = Math.floor(end_days / 7) + 1;
-
-    var aaa = first_date.format('DDMMMYYYY');
   
     d3.select('#reportrange span')
-      .text(start_days + "/" + start_weeks + "/" + aaa + ' ~ ' + last_date.format('DDMMMYYYY'));
+      .text(first_date.format('DDMMMYYYY') + ' ~ ' + last_date.format('DDMMMYYYY'));
     // $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
 
     var cb = function(start_date, end_date) {

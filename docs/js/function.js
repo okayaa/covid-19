@@ -186,7 +186,7 @@ d3.json("dat/newly_confirmed_cases_daily.json", function (all_data) {
 
     }); 
     
-    function cb(start_date, end_date) {
+    var cb = function(start_date, end_date) {
     
       d3.select('#reportrange span')
         .text(start_date.format('DDMMMYYYY') + ' ~ ' + end_date.format('DDMMMYYYY'));
@@ -218,6 +218,7 @@ d3.json("dat/newly_confirmed_cases_daily.json", function (all_data) {
         minDate: first_date,
         maxDate: last_date,
         linkedCalendars: false,
+        opens: "left",
         ranges: {
           // 'Last Week': [last_date.clone().subtract(1, 'weeks').startOf('weeks'), last_date.clone().subtract(1, 'weeks').endOf('weeks')],
           'This Week': [last_date.clone().startOf('weeks'), last_date],

@@ -127,6 +127,21 @@ d3.json("dat/newly_confirmed_cases_daily.json", function (all_data) {
     nv.utils.windowResize(chart.update);
     // console.log(nv.utils.wrapTicks);
 
+    var reference_date = moment(new Date("29Dec2019"));
+
+    var first_date = moment(new Date("16Jan2020"));
+    // var first_date = new Date(2020, 1 - 1, 16);
+    var last_day_candidates = all_data.filter(d => d.prefecture == "ALL").map(d => d.data.values.slice(-1)).filter(d => d !== null);
+    var last_day = Math.max(...last_day_candidates.map(d => d[0][1]));
+    // var last_week = last_day_candidates.filter(d => d[0][1] == last_day)[0][0][2];
+    var last_date = moment(new Date(last_day_candidates.filter(d => d[0][1] == last_day)[0][0][0]));
+
+    var start_days = first_date.diff(reference_date, "days");
+    var start_weeks = Math.floor(start_days / 7) + 1;
+
+    var end_days = last_date.diff(reference_date, "days");
+    var end_weeks = Math.floor(end_days / 7) + 1;
+
     var previous_state, current_state;
 
     // When the button is changed, run the updateChart function
@@ -166,21 +181,6 @@ d3.json("dat/newly_confirmed_cases_daily.json", function (all_data) {
       // }
 
     }); 
-    
-    var reference_date = moment(new Date("29Dec2019"));
-
-    let first_date = moment(new Date("17Jan2020"));
-    // var first_date = new Date(2020, 1 - 1, 16);
-    var last_day_candidates = all_data.filter(d => d.prefecture == "ALL").map(d => d.data.values.slice(-1)).filter(d => d !== null);
-    var last_day = Math.max(...last_day_candidates.map(d => d[0][1]));
-    // var last_week = last_day_candidates.filter(d => d[0][1] == last_day)[0][0][2];
-    var last_date = moment(new Date(last_day_candidates.filter(d => d[0][1] == last_day)[0][0][0]));
-
-    var start_days = first_date.diff(reference_date, "days");
-    var start_weeks = Math.floor(start_days / 7) + 1;
-
-    var end_days = last_date.diff(reference_date, "days");
-    var end_weeks = Math.floor(end_days / 7) + 1;
   
     d3.select('#reportrange span')
       .text(first_date.format('DDMMMYYYY') + ' ~ ' + last_date.format('DDMMMYYYY'));

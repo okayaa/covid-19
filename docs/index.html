@@ -9,16 +9,12 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/nvd3/1.8.6/nv.d3.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/nvd3/1.8.6/nv.d3.min.css"/>
-    
-    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.js"></script> -->
-    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flatpickr/4.6.13/flatpickr.min.css"> -->
 
-    <!-- To avoid ’CSSStyleSheet’: Cannot access rules, locate in the same server -->
-    <!-- <script src="js/flatpickr.min.js"></script> Need to modify around "document.styleSheets" from the origin -->
-    <!-- <link rel="stylesheet" href="css/flatpickr.min.css"> Need to locate in the same server -->
-
-    <script src="https://unpkg.com/js-datepicker"></script>
-    <link rel="stylesheet" href="https://unpkg.com/js-datepicker/dist/datepicker.min.css">
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <script src="js/function.js"></script>
   </head>
@@ -26,15 +22,23 @@
   <body>
     <h1>COVID-19 新規感染者数 in 日本</h1>
     <div style="height: 600px">
-      <a style='margin: 10px;'>都道府県:</a>
-      <select id="select_button"></select><br>
-      <!-- <a style='margin-left: 10px;'>&</a> -->
-      <a style='margin: 10px;'>期間　　:</a>
-      <input id="start_date" type="text" size=7 style='text-align: center; margin: 10px 0px 10px'>
-      <a style='margin: 10px;'>~</a>
-      <input id="end_date" type="text" size=7 style='text-align: center;'>
+      <div id="selectors" style="margin: 10px;">
+        <div>
+          <a>都道府県:</a>
+          <select id="select_button" style="cursor: pointer;"></select>
+        </div>
+        <div style="margin-top: 5px;">
+          <a>期間　　:</a>
+          <div id="reportrange" style="cursor: pointer; border: 1px solid #ccc; display: inline-block; _display: inline;">
+            <i class="fa fa-calendar" style="margin: 0 5px;"></i>
+            <span></span>
+            <i class="fa fa-caret-down" style="margin: 0 5px;"></i>
+          </div>
+        </div>
+      </div>
       <svg id="chart"></svg> <!-- ontouchstart=""></svg> -->
       <!-- ontouchstart = "": To make hover available for touch-devices -->
     </div>
   </body>
+  
 </html>

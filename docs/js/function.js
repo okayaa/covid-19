@@ -230,10 +230,10 @@ d3.json("dat/newly_confirmed_cases_daily.json", function (all_data) {
           // 'Last Week': [last_date.clone().subtract(1, 'weeks').startOf('weeks'), last_date.clone().subtract(1, 'weeks').endOf('weeks')],
           'This Week': [last_date.clone().startOf('weeks'), last_date],
           'Last + This Week': [last_date.clone().subtract(1, 'weeks').startOf('weeks'), last_date],
-          '4 Weeks (1 Month)': [last_date.clone().subtract(4 - 1, 'weeks').startOf('weeks'), last_date],
-          '13 Weeks (3 Months)': [last_date.clone().subtract(13 - 1, 'weeks').startOf('weeks'), last_date],
-          '26 Weeks (6 Months)': [last_date.clone().subtract(26 - 1, 'weeks').startOf('weeks'), last_date],
-          '52 Weeks (1 year)': [last_date.clone().subtract(52 - 1, 'weeks').startOf('weeks'), last_date],
+          'Last 4 Weeks': [last_date.clone().subtract(4 - 1, 'weeks').startOf('weeks'), last_date],
+          'Last 13 Weeks': [last_date.clone().subtract(13 - 1, 'weeks').startOf('weeks'), last_date],
+          'Last 26 Weeks': [last_date.clone().subtract(26 - 1, 'weeks').startOf('weeks'), last_date],
+          'Last 52 Weeks': [last_date.clone().subtract(52 - 1, 'weeks').startOf('weeks'), last_date],
           'Entire Period': [first_date, last_date]
         }
     }, update_period);

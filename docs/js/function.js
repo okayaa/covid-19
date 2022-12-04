@@ -127,9 +127,11 @@ d3.json("dat/newly_confirmed_cases_daily.json", function (all_data) {
     nv.utils.windowResize(chart.update);
     // console.log(nv.utils.wrapTicks);
 
-    var reference_date = moment(new Date("29Dec2019"));
+    var reference_date = moment(new Date("2019-12-29"));
+    // var reference_date = moment(new Date("29Dec2019"));
 
-    var first_date = moment(new Date("16Jan2020"));
+    // var first_date = moment(new Date("16Jan2020"));
+    var first_date = moment(new Date("2020-01-16"));
     // var first_date = new Date(2020, 1 - 1, 16);
     var last_day_candidates = all_data.filter(d => d.prefecture == "ALL").map(d => d.data.values.slice(-1)).filter(d => d !== null);
     var last_day = Math.max(...last_day_candidates.map(d => d[0][1]));

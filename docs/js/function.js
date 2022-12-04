@@ -36,16 +36,18 @@ d3.json("dat/newly_confirmed_cases_daily.json", function (all_data) {
   // var first_date = moment(new Date("16Jan2020"));
   var first_date = moment(new Date("2020-01-16"));
 
-  var last_day_candidates = all_data.filter(d => d.prefecture == "ALL").map(d => d.data.values.slice(-1)).filter(d => d !== null);
-  var last_day = Math.max(...last_day_candidates.map(d => d[0][1]));
+  // var last_day_candidates = all_data.filter(d => d.prefecture == "ALL").map(d => d.data.values.slice(-1)).filter(d => d[0][3] !== null);
+  // var last_day = Math.max(...last_day_candidates.map(d => d[0][1]));
   // var last_week = last_day_candidates.filter(d => d[0][1] == last_day)[0][0][2];
-  var last_date = moment(new Date(last_day_candidates.filter(d => d[0][1] == last_day)[0][0][0]));
+  // var last_date = moment(new Date(last_day_candidates.filter(d => d[0][1] == last_day)[0][0][0]));
+  var last_date_chr = all_data.filter(d => d.prefecture == "ALL").map(d => d.data.values.slice(-1)).filter(d => d[0][3] !== null).slice(-1)[0][0][0];
+  var last_date = moment(new Date(last_date_chr));
 
-  var start_days = first_date.hour(0).minutes(0).second(0).millisecond(0).diff(reference_date, "days");
-  var start_weeks = Math.floor(start_days / 7) + 1;
+  var start_day = first_date.hour(0).minutes(0).second(0).millisecond(0).diff(reference_date, "days");
+  var start_week = Math.floor(start_day / 7) + 1;
 
-  var end_days = last_date.hour(0).minutes(0).second(0).millisecond(0).diff(reference_date, "days");
-  var end_weeks = Math.floor(end_days / 7) + 1;
+  var end_day = last_date.hour(0).minutes(0).second(0).millisecond(0).diff(reference_date, "days");
+  var end_week = Math.floor(end_day / 7) + 1;
 
   d3.select('#reportrange span')
     .text(first_date.format('DDMMMYYYY') + ' ~ ' + last_date.format('DDMMMYYYY'));
@@ -157,7 +159,7 @@ d3.json("dat/newly_confirmed_cases_daily.json", function (all_data) {
       // recover the option that has been chosen
       selected_option = d3.select(this).property("value"); 
       // console.log(selected_option)
-      data = all_data.filter(d => {return d.prefecture == selected_option}).map(d => {return {key: d.data.key, values: d.data.values.filter(d => {return (d[2] >= start_weeks & d[2] <= end_weeks)})}});
+      data = all_data.filter(d => {return d.prefecture == selected_option}).map(d => {return {key: d.data.key, values: d.data.values.filter(d => {return (d[2] >= start_week & d[2] <= end_week)})}});
       // console.log(data)
             
       previous_state = chart.state.disabled;
@@ -193,15 +195,15 @@ d3.json("dat/newly_confirmed_cases_daily.json", function (all_data) {
       d3.select('#reportrange span')
         .text(start_date.format('DDMMMYYYY') + ' ~ ' + end_date.format('DDMMMYYYY'));
       
-      start_days = start_date.hour(0).minutes(0).second(0).millisecond(0).diff(reference_date, "days");
-      start_weeks = Math.floor(start_days / 7) + 1;
+      start_day = start_date.hour(0).minutes(0).second(0).millisecond(0).diff(reference_date, "days");
+      start_week = Math.floor(start_day / 7) + 1;
     
-      end_days = end_date.hour(0).minutes(0).second(0).millisecond(0).diff(reference_date, "days");
-      end_weeks = Math.floor(end_days / 7) + 1;
+      end_day = end_date.hour(0).minutes(0).second(0).millisecond(0).diff(reference_date, "days");
+      end_week = Math.floor(end_day / 7) + 1;
 
-      // console.log([start_days, end_days]);
+      // console.log([start_day, end_day]);
 
-      data = all_data.filter(d => {return d.prefecture == selected_option}).map(d => {return {key: d.data.key, values: d.data.values.filter(d => {return (d[2] >= start_weeks & d[2] <= end_weeks)})}});
+      data = all_data.filter(d => {return d.prefecture == selected_option}).map(d => {return {key: d.data.key, values: d.data.values.filter(d => {return (d[2] >= start_week & d[2] <= end_week)})}});
               
       previous_state = chart.state.disabled;
 
@@ -221,6 +223,7 @@ d3.json("dat/newly_confirmed_cases_daily.json", function (all_data) {
         endDate: last_date,
         minDate: first_date,
         maxDate: last_date,
+        isInvalidDate: function(date) {return !(date.isoWeekday() == 7 || date.isSame(first_date) || date.isSame(last_date))}, // 7: Sunday
         linkedCalendars: false,
         opens: "left",
         ranges: {

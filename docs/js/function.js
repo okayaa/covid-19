@@ -77,14 +77,16 @@ d3.json("dat/newly_confirmed_cases_daily.json", function (all_data) {
     chart.xAxis
       //.tickValues(xtickValues)
       .tickFormat((d, i) => {
-        var n = chart.state.disabled.filter(Boolean).length;
-        if (n != 6) {
-          return d3.time.format("%d%b%Y")(new Date(data[0]['values'][i][0]));
-        } else if (n == 6) {
-          nth_weekday = chart.state.disabled.findIndex(x => x === false); // 0: Sunday - 6: Saturday
-          return d3.time.format("%d%b%Y")(new Date(data[0 + nth_weekday]['values'][i][0]));
-        } else {
-        }
+        // var n = chart.state.disabled.filter(Boolean).length;
+        // if (n != 6) {
+        //   return d3.time.format("%d%b%Y")(new Date(data[0]['values'][i][0]));
+        // } else if (n == 6) {
+        //   nth_weekday = chart.state.disabled.findIndex(x => x === false); // 0: Sunday - 6: Saturday
+        //   return d3.time.format("%d%b%Y")(new Date(data[0 + nth_weekday]['values'][i][0]));
+        // } else {
+        // }
+        nth_weekday = chart.state.disabled.findIndex(x => x === false); // 0: Sunday - 6: Saturday
+        return d3.time.format("%d%b%Y")(new Date(data[0 + nth_weekday]['values'][i][0]));
       })
       .showMaxMin(false);
 
@@ -100,32 +102,32 @@ d3.json("dat/newly_confirmed_cases_daily.json", function (all_data) {
       // .headerFormatter(function () {
       //   return "";
       // })
-      // .valueFormatter(function (d) {
       //   return d == null ? null : d3.format(",.0f")(d) + "人";
       // });
       .contentGenerator(function(d) {
         // console.log(chart.state.disabled);
-        var header;
-        if (d.series.length > 1) {
-          header = d3.time.format("%d%b%Y")(new Date(data[0].values[d.index][0])) + " ~ " + d3.time.format("%d%b%Y")(new Date(data[6].values[d.index][0]));
-        } else if (d.series.length == 1) {
-          header = d3.time.format("%d%b%Y")(new Date(d.series[0].data[0]));
-        } else {
-          header = "";
-        }
-        var headerhtml = "<thead><tr><td colspan='3'><strong class='x-value'>" + 
-                         header + 
-                         "</strong></td></tr></thead>";
+
+        // var header;
+        // if (d.series.length > 1) {
+        //   header = d3.time.format("%d%b%Y")(new Date(data[0].values[d.index][0])) + " ~ " + d3.time.format("%d%b%Y")(new Date(data[6].values[d.index][0]));
+        // } else if (d.series.length == 1) {
+        //   header = d3.time.format("%d%b%Y")(new Date(d.series[0].data[0]));
+        // } else {
+        //   header = "";
+        // }
+        // var headerhtml = "<thead><tr><td colspan='3'><strong class='x-value'>" + 
+        //                  header + 
+        //                  "</strong></td></tr></thead>";
 
         var bodyhtml = d.series.map(function(d) {
           return("<tr>" + 
                  "<td class='legend-color-guide'>" + "<div style='background-color: " + d.color + ";'></div></td>" + 
-                 "<td class='key'>" + d.key + "</td>" + 
+                 "<td class='key'>" + d.key + " (" + d3.time.format("%d%b%Y")(new Date(d.data[0])) + ")" + "</td>" + 
                  "<td class='value'>" + (d.value === null ? "" : (d3.format(",.0f")(d.value) + "人")) + "</td>" + 
                  "</tr>");
         }).join("");
-        var total = d.series.map(d => d.value).reduce((accumulator, currentValue) => {return(accumulator + currentValue);});
         if (d.series.length > 1) {
+          var total = d.series.map(d => d.value).reduce((accumulator, currentValue) => {return(accumulator + currentValue);});
           bodyhtml = bodyhtml + 
                       "<tr>" + 
                         "<td class='legend-color-guide' style='border-top: 1px solid black;'>" + "</td>" + 
@@ -135,7 +137,8 @@ d3.json("dat/newly_confirmed_cases_daily.json", function (all_data) {
         }
         bodyhtml = "<tbody>" + bodyhtml + "</tbody>";
 
-        return "<table>" + headerhtml + bodyhtml + "</table>";
+        // return "<table>" + headerhtml + bodyhtml + "</table>";
+        return "<table>" + bodyhtml + "</table>";
       });
 
 

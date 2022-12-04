@@ -30,7 +30,7 @@ d3.json("dat/newly_confirmed_cases_daily.json", function (all_data) {
   // var reference_date = moment(new Date("29Dec2019"));
 
   // This way is OK...
-  var reference_date = moment(new Date("2019-12-29"));
+  var reference_date = moment(new Date("2019-12-29 00:00:00.000"));
 
   // var first_date = new Date(2020, 1 - 1, 16);
   // var first_date = moment(new Date("16Jan2020"));
@@ -41,10 +41,10 @@ d3.json("dat/newly_confirmed_cases_daily.json", function (all_data) {
   // var last_week = last_day_candidates.filter(d => d[0][1] == last_day)[0][0][2];
   var last_date = moment(new Date(last_day_candidates.filter(d => d[0][1] == last_day)[0][0][0]));
 
-  var start_days = first_date.diff(reference_date, "days");
+  var start_days = first_date.hour(0).minutes(0).second(0).millisecond(0).diff(reference_date, "days");
   var start_weeks = Math.floor(start_days / 7) + 1;
 
-  var end_days = last_date.diff(reference_date, "days");
+  var end_days = last_date.hour(0).minutes(0).second(0).millisecond(0).diff(reference_date, "days");
   var end_weeks = Math.floor(end_days / 7) + 1;
 
   d3.select('#reportrange span')
@@ -74,10 +74,6 @@ d3.json("dat/newly_confirmed_cases_daily.json", function (all_data) {
       .groupSpacing(0); //Distance between each group of bars.
     // Format x-axis labels with custom function.
 
-    // var xtickValues = data[0].values.map((d) => {
-    //   return d[2];
-    // });  
-
     chart.xAxis
       //.tickValues(xtickValues)
       .tickFormat((d, i) => {
@@ -100,9 +96,6 @@ d3.json("dat/newly_confirmed_cases_daily.json", function (all_data) {
     // .fontSize(15);
 
     // need to use "interactiveLayer.tooltip" option, not "tooltip" option
-    // chart.tooltip.valueFormatter(function (d) {
-    //   return d3.format(",.1f")(d) + "万円";
-    // });
     chart.interactiveLayer.tooltip
       // .headerFormatter(function () {
       //   return "";
@@ -151,45 +144,41 @@ d3.json("dat/newly_confirmed_cases_daily.json", function (all_data) {
     d3.select(".tick.zero line").style("stroke", "#000"); // to draw x axis in black
 
     nv.utils.windowResize(chart.update);
-    // console.log(nv.utils.wrapTicks);
 
+    // console.log(nv.utils.wrapTicks);
 
     var previous_state, current_state;
 
     var change_prefecture = function(d) {
 
-      // if (start_date.length == 1 && end_date.length == 1 && (end_date[0] >= start_date[0])) {
+      // recover the option that has been chosen
+      selected_option = d3.select(this).property("value"); 
+      // console.log(selected_option)
+      data = all_data.filter(d => {return d.prefecture == selected_option}).map(d => {return {key: d.data.key, values: d.data.values.filter(d => {return (d[2] >= start_weeks & d[2] <= end_weeks)})}});
+      // console.log(data)
+            
+      previous_state = chart.state.disabled;
 
-        // recover the option that has been chosen
-        selected_option = d3.select(this).property("value"); 
-        // console.log(selected_option)
-        data = all_data.filter(d => {return d.prefecture == selected_option}).map(d => {return {key: d.data.key, values: d.data.values.filter(d => {return (d[2] >= start_weeks & d[2] <= end_weeks)})}});
-        // console.log(data)
-              
-        previous_state = chart.state.disabled;
+      // run the updateChart function with this selected option
+      d3.select("#chart").datum(data).call(chart.update); // .call(chart)
+      
+      // .call(function() {
+      //   d3.select("g.nv-legendWrap")
+      //   .selectAll("g.nv-series")
+      //   .filter((d, i) => {return current_state[i] == true;})
+      //   .each(function(d, i) { // can NOT use an arrow function...
+      //     this.dispatchEvent(new Event("click"));
+      //     // d3.select("circle").style("fill-opacity", function() {return current_state[i] ? 0 : 1});
+      //   });
 
-        // run the updateChart function with this selected option
-        d3.select("#chart").datum(data).call(chart.update); // .call(chart)
-        
-        // .call(function() {
-        //   d3.select("g.nv-legendWrap")
-        //   .selectAll("g.nv-series")
-        //   .filter((d, i) => {return current_state[i] == true;})
-        //   .each(function(d, i) { // can NOT use an arrow function...
-        //     this.dispatchEvent(new Event("click"));
-        //     // d3.select("circle").style("fill-opacity", function() {return current_state[i] ? 0 : 1});
-        //   });
+      current_state = chart.state.disabled;
 
-        current_state = chart.state.disabled;
-
-        // To retain "state" (week days were checked or not) when the prefecture was changed.
-        d3.select("g.nv-legendWrap")
-          .selectAll("g.nv-series")
-          .each(function(d, i) { // can NOT use an arrow function...
-            if (current_state[i] != previous_state[i]) this.dispatchEvent(new Event("click"));
-          });
-
-      // }
+      // To retain "state" (week days were checked or not) when the prefecture was changed.
+      d3.select("g.nv-legendWrap")
+        .selectAll("g.nv-series")
+        .each(function(d, i) { // can NOT use an arrow function...
+          if (current_state[i] != previous_state[i]) this.dispatchEvent(new Event("click"));
+        });
 
     };
 
@@ -200,12 +189,14 @@ d3.json("dat/newly_confirmed_cases_daily.json", function (all_data) {
     var update_period = function(start_date, end_date) {
       d3.select('#reportrange span')
         .text(start_date.format('DDMMMYYYY') + ' ~ ' + end_date.format('DDMMMYYYY'));
-
-      start_days = start_date.diff(reference_date, "days");
+      
+      start_days = start_date.hour(0).minutes(0).second(0).millisecond(0).diff(reference_date, "days");
       start_weeks = Math.floor(start_days / 7) + 1;
     
-      end_days = end_date.diff(reference_date, "days");
+      end_days = end_date.hour(0).minutes(0).second(0).millisecond(0).diff(reference_date, "days");
       end_weeks = Math.floor(end_days / 7) + 1;
+
+      // console.log([start_days, end_days]);
 
       data = all_data.filter(d => {return d.prefecture == selected_option}).map(d => {return {key: d.data.key, values: d.data.values.filter(d => {return (d[2] >= start_weeks & d[2] <= end_weeks)})}});
               
@@ -217,7 +208,7 @@ d3.json("dat/newly_confirmed_cases_daily.json", function (all_data) {
 
       d3.select("g.nv-legendWrap")
         .selectAll("g.nv-series")
-        .each(function(d, i) { // can NOT use an arrow function...
+        .each(function(d, i) { // can NOT use an arrow function because of "this" scope
           if (current_state[i] != previous_state[i]) this.dispatchEvent(new Event("click"));
         });
     };

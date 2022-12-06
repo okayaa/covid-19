@@ -126,6 +126,14 @@ d3.json("dat/newly_confirmed_cases_daily.json", function (all_data) {
         //                  header + 
         //                  "</strong></td></tr></thead>";
 
+        if (d.series.every(d => (d.value === null)) == true) {
+          d3.select(".nvtooltip.xy-tooltip")
+            .style("display", "none");
+        } else {
+          d3.select(".nvtooltip.xy-tooltip")
+            .style("display", "block");          
+        }
+
         var bodyhtml = d.series.map(function(d) {
           return("<tr>" + 
                  "<td class='legend-color-guide'>" + "<div style='background-color: " + d.color + ";'></div></td>" + 

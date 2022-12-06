@@ -1,5 +1,8 @@
 d3.json("dat/newly_confirmed_cases_daily.json", function (all_data) {
 
+  var time_format_d3 = "%Y/%-m/%-d"; // "%d%b%Y"
+  var time_format_moment = "YYYY/M/D"; // "DDMMMYYYY"
+
   var prefecture_J = ['全国合計', '北海道', '青森県', '岩手県', '宮城県', '秋田県', '山形県', 
                       '福島県', '茨城県', '栃木県', '群馬県', '埼玉県', '千葉県', '東京都', 
                       '神奈川県', '新潟県', '富山県', '石川県', '福井県', '山梨県', '長野県', 
@@ -52,7 +55,7 @@ d3.json("dat/newly_confirmed_cases_daily.json", function (all_data) {
   var end_week = Math.floor(end_day / 7) + 1;
 
   d3.select('#reportrange span')
-    .text(first_date.format('DDMMMYYYY') + ' ~ ' + last_date.format('DDMMMYYYY'));
+    .text(first_date.format(time_format_moment) + ' ~ ' + last_date.format(time_format_moment));
   // $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
 
   nv.addGraph(function () {
@@ -83,14 +86,14 @@ d3.json("dat/newly_confirmed_cases_daily.json", function (all_data) {
       .tickFormat((d, i) => {
         // var n = chart.state.disabled.filter(Boolean).length;
         // if (n != 6) {
-        //   return d3.time.format("%d%b%Y")(new Date(data[0]['values'][i][0]));
+        //   return d3.time.format(time_format_d3)(new Date(data[0]['values'][i][0]));
         // } else if (n == 6) {
         //   nth_weekday = chart.state.disabled.findIndex(x => x === false); // 0: Sunday - 6: Saturday
-        //   return d3.time.format("%d%b%Y")(new Date(data[0 + nth_weekday]['values'][i][0]));
+        //   return d3.time.format(time_format_d3)(new Date(data[0 + nth_weekday]['values'][i][0]));
         // } else {
         // }
         nth_weekday = chart.state.disabled.findIndex(x => x === false); // 0: Sunday - 6: Saturday
-        return d3.time.format("%d%b%Y")(new Date(data[0 + nth_weekday]['values'][i][0]));
+        return d3.time.format(time_format_d3)(new Date(data[0 + nth_weekday]['values'][i][0]));
       })
       .showMaxMin(false);
 
@@ -113,9 +116,9 @@ d3.json("dat/newly_confirmed_cases_daily.json", function (all_data) {
 
         // var header;
         // if (d.series.length > 1) {
-        //   header = d3.time.format("%d%b%Y")(new Date(data[0].values[d.index][0])) + " ~ " + d3.time.format("%d%b%Y")(new Date(data[6].values[d.index][0]));
+        //   header = d3.time.format(time_format_d3)(new Date(data[0].values[d.index][0])) + " ~ " + d3.time.format(time_format_d3)(new Date(data[6].values[d.index][0]));
         // } else if (d.series.length == 1) {
-        //   header = d3.time.format("%d%b%Y")(new Date(d.series[0].data[0]));
+        //   header = d3.time.format(time_format_d3)(new Date(d.series[0].data[0]));
         // } else {
         //   header = "";
         // }
@@ -126,7 +129,7 @@ d3.json("dat/newly_confirmed_cases_daily.json", function (all_data) {
         var bodyhtml = d.series.map(function(d) {
           return("<tr>" + 
                  "<td class='legend-color-guide'>" + "<div style='background-color: " + d.color + ";'></div></td>" + 
-                 "<td class='key'>" + d.key + " (" + d3.time.format("%d%b%Y")(new Date(d.data[0])) + ")" + "</td>" + 
+                 "<td class='key'>" + d.key + " (" + d3.time.format(time_format_d3)(new Date(d.data[0])) + ")" + "</td>" + 
                  "<td class='value'>" + (d.value === null ? "" : (d3.format(",.0f")(d.value) + "人")) + "</td>" + 
                  "</tr>");
         }).join("");
@@ -142,7 +145,7 @@ d3.json("dat/newly_confirmed_cases_daily.json", function (all_data) {
         bodyhtml = "<tbody>" + bodyhtml + "</tbody>";
 
         // return "<table>" + headerhtml + bodyhtml + "</table>";
-        return "<table>" + bodyhtml + "</table>";
+        return("<table>" + bodyhtml + "</table>");
       });
 
 
@@ -202,7 +205,7 @@ d3.json("dat/newly_confirmed_cases_daily.json", function (all_data) {
     var change_period = function(start_date, end_date) {
 
       d3.select('#reportrange span')
-        .text(start_date.format('DDMMMYYYY') + ' ~ ' + end_date.format('DDMMMYYYY'));
+        .text(start_date.format(time_format_moment) + ' ~ ' + end_date.format(time_format_moment));
       
       start_day = start_date.hour(0).minutes(0).second(0).millisecond(0).diff(reference_date, "days");
       start_week = Math.floor(start_day / 7) + 1;

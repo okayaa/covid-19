@@ -18,7 +18,6 @@
 
     <script src="js/draw_nvd3_multibarchart.js"></script>
   </head>
-
   <body>
     <h3>COVID-19 新規感染者数 in 日本</h3>
     <div style="height: 600px">
@@ -40,14 +39,16 @@
       <!-- ontouchstart = "": To make hover available for touch-devices -->
       <div style="margin: 10px 20px 10px 0; text-align: right; font-size: 10px;">
         <p style="margin-top: -10px;">
-          source: <a href = "https://covid19.mhlw.go.jp/public/opendata/newly_confirmed_cases_daily.csv">新規陽性者数の推移（日別）</a> (csvファイル) 
+          data source: <a href = "https://covid19.mhlw.go.jp/public/opendata/newly_confirmed_cases_daily.csv">新規陽性者数の推移（日別）</a> (csvファイル) 
           by <a target = "_blank" href = "https://covid19.mhlw.go.jp/">厚生労働省</a>
         </p>
         <p style="margin-top: -10px;">
-          update: 16:00 ~ 17:00 / every day
+          updated every day around 5:00 PM
         </p>
-        <p style="margin-top: -10px;">
-          created by: okayaa
+        <p style="margin-top: 0px;">
+          created by okayaa using 
+          <a target = "_blank" href = "https://nvd3.org/">nvd3</a> (d3), 
+          <a target = "_blank" href = "https://www.daterangepicker.com/">daterangepicker</a> (jQuery, moment.js)
         </p>
       </div>
     </div>

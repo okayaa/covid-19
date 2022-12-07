@@ -140,13 +140,13 @@ Promise.all(promise_all_data)
           //                  header + 
           //                  "</strong></td></tr></thead>";
 
-          if (d.series.every(d => (d.value === null)) == true) {
-            d3.select(".nvtooltip.xy-tooltip")
-              .style("display", "none");
-          } else {
-            d3.select(".nvtooltip.xy-tooltip")
-              .style("display", "block");          
-          }
+          // if (d.series.every(d => (d.value === null)) == true) {
+          //   d3.select(".nvtooltip.xy-tooltip")
+          //     .style("display", "none");
+          // } else {
+          //   d3.select(".nvtooltip.xy-tooltip")
+          //     .style("display", "block");          
+          // }
 
           let bodyhtml = d.series.map(function(d) {
             return("<tr>" + 

@@ -81,6 +81,7 @@ Promise.all(promise_all_data)
         .y(function (d) {
           return d[3];
         }) //...in case your data is formatted differently.
+        .forceY([0, 1])
         .margin({left: 80})
         .duration(500)
         .useInteractiveGuideline(true)
@@ -185,6 +186,7 @@ Promise.all(promise_all_data)
 
         data = all_data[selected_endpoint].filter(d => {return d.prefecture == selected_prefecture}).map(d => {return {key: d.data.key, values: d.data.values.filter(d => {return (d[2] >= start_week & d[2] <= end_week)})}});
         // console.log(data)
+        // console.log(data.filter((d, i) => !chart.state.disabled[i]).map(d => d.values).map(d => d.map(d => d[3])).flat().every(d => d === null));
               
         previous_state = chart.state.disabled;
 

@@ -19,14 +19,18 @@
     <script src="js/draw_nvd3_multibarchart.js"></script>
   </head>
   <body>
-    <h3>COVID-19 新規感染者数 in 日本</h3>
+    <h3>COVID-19 データ in 日本</h3>
     <div style="height: 600px">
       <div id="selectors" style="margin: 10px;">
-        <div>
-          <a>都道府県:</a>
-          <select id="select_button" style="cursor: pointer;"></select>
+        <div style="margin-bottom: 5px;">
+          <a>評価項目:</a>
+          <select id="endpoint" style="cursor: pointer;"></select>
         </div>
-        <div style="margin-top: 5px;">
+        <div style="margin-bottom: 5px;">
+          <a>都道府県:</a>
+          <select id="prefecture" style="cursor: pointer;"></select>
+        </div>
+        <div style="margin-bottom: 5px;">
           <a>期間　　:</a>
           <div id="reportrange" style="cursor: pointer; border: 1px solid #ccc; display: inline-block; _display: inline;">
             <i class="fa fa-calendar" style="margin: 0 5px;"></i>

@@ -52,9 +52,8 @@ imputes_lacking_week_days <- function(dat) {
     bind_rows(dat)
 }
 
-paste0("https://covid19.mhlw.go.jp/public/opendata/",
-       "newly_confirmed_cases_daily",
-       ".csv") %>%
+save_json <- function(x) {
+  paste0("https://covid19.mhlw.go.jp/public/opendata/", x, ".csv") %>%
   read_csv() %>%
   imputes_lacking_week_days() %>%
   mutate(date = as.Date(Date)) %>%
@@ -71,4 +70,10 @@ paste0("https://covid19.mhlw.go.jp/public/opendata/",
   nest() %>%
   pmap(function(prefecture, week_day, data) list(prefecture = prefecture, data = list(key = week_day, values = data))) %>%
   toJSON(dataframe = "values", auto_unbox = TRUE, pretty = TRUE, na = "null") %>%
-  write(file = "docs/dat/newly_confirmed_cases_daily.json")
+  write(file = paste0("docs/dat/", x, ".json"))
+}
+
+c("newly_confirmed_cases_daily", 
+  "severe_cases_daily", 
+  "number_of_deaths_daily") %>%  # "requiring_inpatient_care_etc_daily"
+  walk(save_json)

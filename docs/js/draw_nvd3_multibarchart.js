@@ -152,7 +152,7 @@ Promise.all(promise_all_data)
             return("<tr>" + 
                     "<td class='legend-color-guide'>" + "<div style='background-color: " + d.color + ";'></div></td>" + 
                     "<td class='key'>" + d.key + " (" + d3.time.format(time_format_d3)(new Date(d.data[0])) + ")" + "</td>" + 
-                    "<td class='value'>" + (d.value === null ? "" : (d3.format(",.0f")(d.value) + "人")) + "</td>" + 
+                    "<td class='value'>" + (d.value === null ? "No Data" : (d3.format(",.0f")(d.value) + "人")) + "</td>" + 
                    "</tr>");
           }).join("");
           if ((d.series.length > 1) & !(d.series.every(d => (d.value === null)) == true)) {

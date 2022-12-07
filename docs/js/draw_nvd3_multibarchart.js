@@ -271,8 +271,8 @@ Promise.all(all_data).then(
           }
       }, change_period);
 
-    });
+      return chart;
 
-    return chart;
+    });
 
   });

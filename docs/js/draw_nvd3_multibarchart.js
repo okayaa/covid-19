@@ -155,7 +155,7 @@ Promise.all(promise_all_data)
                     "<td class='value'>" + (d.value === null ? "" : (d3.format(",.0f")(d.value) + "人")) + "</td>" + 
                    "</tr>");
           }).join("");
-          if (d.series.length > 1) {
+          if ((d.series.length > 1) & !(d.series.every(d => (d.value === null)) == true)) {
             let total = d.series.map(d => d.value).reduce((accumulator, currentValue) => {return(accumulator + currentValue);});
             bodyhtml = bodyhtml + 
                         "<tr>" + 
@@ -163,7 +163,7 @@ Promise.all(promise_all_data)
                           "<td class='key' style='border-top: 1px solid black;'>" + "合計" + "</td>" + 
                           "<td class='value' style='border-top: 1px solid black;'>" + d3.format(",.0f")(total) + "人" + "</td>" + 
                         "</tr>";
-          }
+          };
           bodyhtml = "<tbody>" + bodyhtml + "</tbody>";
 
           // return "<table>" + headerhtml + bodyhtml + "</table>";

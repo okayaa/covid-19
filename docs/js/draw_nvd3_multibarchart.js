@@ -62,7 +62,7 @@ Promise.all(promise_all_data)
     // let last_week = last_day_candidates.filter(d => d[0][1] == last_day)[0][0][2];
     // let last_date = moment(new Date(last_day_candidates.filter(d => d[0][1] == last_day)[0][0][0]));
     // let last_date_chr = data.map(d => d.values.slice(-1)).filter(d => d[0][3] !== null).slice(-1)[0][0][0];
-    let last_date_chr = data.map(d => d.values.slice(-1)).filter(d => d[0][3] !== null).slice(-1)[0][0][0];
+    let last_date_chr = data.map(d => d.values.slice(-1)).slice(-1)[0][0][0];
     let last_date = moment(new Date(last_date_chr));
 
     let end_day = last_date.hour(0).minutes(0).second(0).millisecond(0).diff(reference_date, "days");
@@ -258,7 +258,8 @@ Promise.all(promise_all_data)
           endDate: last_date,
           minDate: reference_date,
           maxDate: last_date,
-          isInvalidDate: function(date) {return !([6, 7].includes(date.isoWeekday()) || date.isSame(reference_date) || date.isSame(last_date))}, // 6: Saturday, 7: Sunday
+          // isInvalidDate: function(date) {return !([6, 7].includes(date.isoWeekday()) || date.isSame(reference_date) || date.isSame(last_date))},
+          isInvalidDate: function(date) {return !([6, 7].includes(date.isoWeekday()))}, // 6: Saturday, 7: Sunday
           linkedCalendars: false,
           opens: "left",
           ranges: {

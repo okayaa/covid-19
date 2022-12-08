@@ -19,21 +19,23 @@ WEEKDAY_E <- paste0(c("Sun", "Mon", "Tues", "Wednes", "Thurs", "Fri", "Satur"), 
 WEEKDAY_J <- paste0(c("日", "月", "火", "水", "木", "金", "土"), "曜日")
 # WEEKDAY_J <- c("日", "月", "火", "水", "木", "金", "土")
 
-reference_date <- as.Date("2019/12/29") # as.POSIXct("2019/12/29", format = "%Y/%m/%d")
+# reference_date <- as.Date("2019/12/29") # as.POSIXct("2019/12/29", format = "%Y/%m/%d")
+reference_date <- as.Date("2020/1/12")
 imputes_lacking_week_days <- function(dat) {
   dat %>% {
     c(filter(., row_number() == 1) %>%
         pull(Date) %>%
         as.Date %>% {
-        len <- weekdays(.) %>%
-          {WEEKDAY_E == .} %>%
-          which %>%
-          subtract(1)
-        seq.Date(from = . - len, to = . - 1, length.out = len) %>%
+        # len <- weekdays(.) %>%
+        #   {WEEKDAY_E == .} %>%
+        #   which %>%
+        #   subtract(1)
+        # seq.Date(from = . - len, to = . - 1, length.out = len) %>%
+          len <- subtract(., reference_date) 
+          seq.Date(from = reference_date, to = subtract(., 1), length.out = len) %>%
           as.character() %>%
           str_replace_all("-", "/")
-        }
-      ,
+        },
       filter(., row_number() == n()) %>%
       pull(Date) %>%
       as.Date %>% {
@@ -57,8 +59,10 @@ save_json <- function(x) {
   read_csv() %>%
   imputes_lacking_week_days() %>%
   mutate(date = as.Date(Date)) %>%
-  mutate(days_from_2019_12_29 = as.numeric(date - reference_date)) %>%
-  mutate(week_num = days_from_2019_12_29 %/% 7 + 1) %>%
+  # mutate(days_from_2019_12_29 = as.numeric(date - reference_date)) %>%
+  mutate(days_from_reference_date = as.numeric(date - reference_date)) %>%
+  # mutate(week_num = days_from_2019_12_29 %/% 7 + 1) %>%
+  mutate(week_num = days_from_reference_date %/% 7 + 1) %>%
   mutate(week_day = date %>% weekdays() %>% map_chr(~ .x %>% equals(WEEKDAY_E) %>% extract(WEEKDAY_J, .))) %>% 
   pivot_longer(cols = ALL:Okinawa, names_to = "prefecture") %>%
   select(-Date) %>%
